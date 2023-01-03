@@ -1,5 +1,9 @@
 import Constants from "expo-constants";
 
+export const storeKeys = {
+  password: "password",
+};
+
 export const NODE_URL: string = Constants.expoConfig?.extra?.nodeUrl;
 export const TEST_ADDRESS: string = Constants.expoConfig?.extra?.testAddress;
 
