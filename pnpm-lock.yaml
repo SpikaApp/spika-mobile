@@ -45,6 +45,7 @@ specifiers:
   react: 18.1.0
   react-dom: 18.1.0
   react-native: 0.70.5
+  react-native-aes-gcm-crypto: ^0.2.2
   react-native-checkbox-reanimated: ^0.1.1
   react-native-dialog: ^9.3.0
   react-native-gesture-handler: ^2.8.0
@@ -89,6 +90,7 @@ dependencies:
   react: 18.1.0
   react-dom: 18.1.0_react@18.1.0
   react-native: 0.70.5_rrp5rjlzavjwtpwddncroexzue
+  react-native-aes-gcm-crypto: 0.2.2_tj3nonr5gneraukzjkxpsiy7yu
   react-native-checkbox-reanimated: 0.1.1_lec5notyw4ef2zq3sdgkowvure
   react-native-dialog: 9.3.0_react-native@0.70.5
   react-native-gesture-handler: 2.8.0_tj3nonr5gneraukzjkxpsiy7yu
@@ -9914,6 +9916,16 @@ packages:
 
   /react-is/18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
+    dev: false
+
+  /react-native-aes-gcm-crypto/0.2.2_tj3nonr5gneraukzjkxpsiy7yu:
+    resolution: {integrity: sha512-vUwkh2zBiIQMRY191IfZhDmhHVT+nV4sxet/A0V8J35lVShCA4kuFzBL+QVB06RM2EF8oZSnNMt/uvFkKAx6QQ==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+    dependencies:
+      react: 18.1.0
+      react-native: 0.70.5_rrp5rjlzavjwtpwddncroexzue
     dev: false
 
   /react-native-checkbox-reanimated/0.1.1_lec5notyw4ef2zq3sdgkowvure:
