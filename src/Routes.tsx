@@ -5,7 +5,7 @@ import "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 
 import { Toolbar } from "./components";
-import { Asset, ConfirmSeed, InitAccount, GenerateSeed, Home, Onboarding, Terms } from "./screens";
+import { Asset, ConfirmSeed, GenerateSeed, Home, InitAccount, Onboarding, Terms } from "./screens";
 import type { RootState } from "./store";
 import { LightTheme } from "./theme";
 
