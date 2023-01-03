@@ -6,7 +6,7 @@ import { name, version, description } from "./package.json";
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     ...config,
-    name: name,
+    name: "Spika",
     slug: name,
     version: version,
     description: description,
