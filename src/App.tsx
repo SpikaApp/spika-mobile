@@ -1,10 +1,11 @@
+import { Feather } from "@expo/vector-icons";
+import "expo-dev-client";
 import { StatusBar } from "react-native";
 import "react-native-gesture-handler";
 import { Provider as PaperProvider } from "react-native-paper";
 import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
-import { Feather } from "@expo/vector-icons";
 
 import { Routes } from "./Routes";
 import { store } from "./store";
