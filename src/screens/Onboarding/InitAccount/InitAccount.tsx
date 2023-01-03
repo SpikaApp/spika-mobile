@@ -13,14 +13,12 @@ import { baseline } from "../../../theme";
 import { styles } from "./styles";
 
 type PasswordStrengthIncludes = "lowercase" | "uppercase" | "symbol" | "number";
-type PasswordStrengthColorCode = "error" | "warning" | "success";
 
 interface PasswordStatus {
   id: number;
   value: string;
   length: string;
   contains: Array<PasswordStrengthIncludes>;
-  colorCode: PasswordStrengthColorCode;
 }
 
 export const InitAccount = ({ navigation }: RootStackScreenProps<"InitAccount">) => {
@@ -39,7 +37,6 @@ export const InitAccount = ({ navigation }: RootStackScreenProps<"InitAccount">)
         value: strength.value,
         length: strength.value,
         contains: strength.contains,
-        colorCode: getPasswordStrengthStatus(strength.id),
       };
       setPasswordStatus(result);
     } else {
@@ -66,21 +63,6 @@ export const InitAccount = ({ navigation }: RootStackScreenProps<"InitAccount">)
       setPasswordError(true);
     }
   }, [confirmPassword, password, passwordStatus]);
-
-  const getPasswordStrengthStatus = (id: number): PasswordStrengthColorCode => {
-    switch (id) {
-      case 0: // Too weak
-        return "error";
-      case 1: // Weak
-        return "warning";
-      case 2: // Medium
-        return "success";
-      case 3: // Strong
-        return "success";
-      default:
-        return "error";
-    }
-  };
 
   const initAccount = () => {
     const { mnemonic } = getRouteParams(navigation) as ConfirmSeedScreenProps;
