@@ -7,8 +7,9 @@ import { useDispatch } from "react-redux";
 import { getAptosAccount } from "../../../core/web3";
 import type { RootStackScreenProps } from "../../../Routes";
 import { getRouteParams } from "../../../core/navigation";
-import { addAccount } from "../../../store/slices/account";
+import { addAccount, initMaster } from "../../../store/slices/account";
 import { baseline } from "../../../theme";
+import { encrypt } from "../../../core/encryptor";
 
 import { styles } from "./styles";
 
@@ -64,20 +65,21 @@ export const InitAccount = ({ navigation }: RootStackScreenProps<"InitAccount">)
     }
   }, [confirmPassword, password, passwordStatus]);
 
-  const initAccount = () => {
+  const initAccount = async () => {
     const { mnemonic } = getRouteParams(navigation) as ConfirmSeedScreenProps;
     const account = getAptosAccount(0, mnemonic);
-    dispatch(
-      addAccount({
-        index: 0,
-        name: "Account 1",
-        data: {
-          address: account.address().hex(),
-          pubKey: account.pubKey().hex(),
-          authKey: account.authKey().hex(),
-        },
-      })
-    );
+    const encryptedMnemonic = await encrypt(mnemonic, password);
+    const publicAccount: SpikaAccount = {
+      index: 0,
+      name: "Account 1",
+      data: {
+        address: account.address().hex(),
+        pubKey: account.pubKey().hex(),
+        authKey: account.authKey().hex(),
+      },
+    };
+    dispatch(initMaster(encryptedMnemonic));
+    dispatch(addAccount(publicAccount));
   };
 
   return (

@@ -17,6 +17,13 @@ interface MnemonicWord {
   value: string;
 }
 
+interface EncryptedObject {
+  content: string;
+  salt: string;
+  iv: string;
+  tag: string;
+}
+
 interface BaseScreenProps {
   displayName: string;
 }

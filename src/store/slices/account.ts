@@ -1,26 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-export interface AccountState {
-  master: Array<SpikaAccount>;
-  current: number | null;
-  latest: number | null;
-}
-
-interface SpikaAccount {
-  index: number;
-  name: string;
-  data: PublicAccount;
-}
-
-interface PublicAccount {
-  address: string;
-  pubKey: string;
-  authKey?: string;
-}
-
 const initialState: AccountState = {
-  master: [],
+  public: [],
+  master: null,
   current: null,
   latest: null,
 };
@@ -29,8 +12,11 @@ export const account = createSlice({
   name: "account",
   initialState,
   reducers: {
+    initMaster: (state, action: PayloadAction<EncryptedObject>) => {
+      state.master = action.payload;
+    },
     addAccount: (state, action: PayloadAction<SpikaAccount>) => {
-      state.master.push(action.payload);
+      state.public.push(action.payload);
       state.latest = action.payload.index;
     },
     switchAccount: (state, action: PayloadAction<number>) => {
@@ -39,4 +25,4 @@ export const account = createSlice({
   },
 });
 
-export const { addAccount, switchAccount } = account.actions;
+export const { initMaster, addAccount, switchAccount } = account.actions;
