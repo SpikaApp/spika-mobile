@@ -1,6 +1,6 @@
 {
   "name": "spika-mobile",
-  "version": "1.0.0-pre-alpha.1",
+  "version": "1.0.0-pre-alpha.2",
   "description": "A crypto wallet on the Aptos blockchain",
   "main": "AppEntry.js",
   "scripts": {
