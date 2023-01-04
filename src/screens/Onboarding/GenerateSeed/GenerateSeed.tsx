@@ -1,24 +1,23 @@
-import { FontAwesome5 as Icon } from "@expo/vector-icons";
 import { generateMnemonic } from "@scure/bip39";
 import { wordlist } from "@scure/bip39/wordlists/english";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
-import { Button, Divider, Surface, Text } from "react-native-paper";
+import { Button, Surface, Text } from "react-native-paper";
 
 import { Checkbox } from "../../../components/Base/Checkbox";
 import { normalizeMnemonic } from "../../../core/mnemonic";
 import type { RootStackScreenProps } from "../../../Routes";
-import { baseline, theme } from "../../../theme";
+import { baseline } from "../../../theme";
+import { copyTextToClipboard } from "../../../utils/clipboard";
+import { sleep } from "../../../utils/sleep";
 
 import { styles } from "./styles";
 
-type CheckedActions = "reveal" | "save";
-
 export const GenerateSeed = ({ navigation }: RootStackScreenProps<"GenerateSeed">) => {
   const [checkedRevealWords, setCheckedRevealWords] = useState<boolean>(false);
-  const [checkedMnemonicSaved, setCheckedMnemonicSaved] = useState<boolean>(false);
   const [mnemonic, setMnemonic] = useState<string>("");
   const [mnemonicObject, setMnemonicObject] = useState<Array<MnemonicWord>>([]);
+  const [copied, setCopied] = useState<boolean>(false);
 
   useEffect(() => {
     const _mnemonic = generateMnemonic(wordlist);
@@ -26,38 +25,35 @@ export const GenerateSeed = ({ navigation }: RootStackScreenProps<"GenerateSeed"
     setMnemonicObject(normalizeMnemonic(_mnemonic));
   }, []);
 
-  const handleCheckboxPress = (action: CheckedActions) => {
-    switch (action) {
-      case "reveal":
-        setCheckedRevealWords((prev) => {
-          return !prev;
-        });
-        break;
-      case "save":
-        setCheckedMnemonicSaved((prev) => {
-          return !prev;
-        });
-        break;
+  useEffect(() => {
+    if (copied) {
+      resetCopyButton();
     }
+  }, [copied]);
+
+  const resetCopyButton = async () => {
+    await sleep(3000);
+    setCopied(false);
+  };
+
+  const handleCheckboxPress = (): void => {
+    setCheckedRevealWords((prev) => {
+      return !prev;
+    });
+  };
+
+  const handleCopyToClipboard = async () => {
+    await copyTextToClipboard(mnemonic);
+    setCopied(true);
   };
 
   return (
     <View style={baseline.baseContainer}>
       <View>
         <Surface elevation={1} style={styles.infoTextContainer}>
-          <Icon
-            name="info-circle"
-            size={24}
-            color={theme.colors.primary}
-            style={[baseline.marginRegularBottom, styles.infoIcon]}
-          />
-          <Text variant="bodyMedium">
-            This is your 12 words secret recovery phrase to restore wallet. On the next screen it will be required to
-            confirm that phrase is properly saved.{" "}
-            <Text variant="titleSmall">
-              Never share your secret recovery phrase with anyone! Spika support team will never ask you for your
-              recovery phrase.
-            </Text>
+          <Text variant="titleSmall">
+            This is your 12 words secret recovery phrase. Never share it with anyone! Spika support team will never ask
+            for your recovery phrase.
           </Text>
         </Surface>
       </View>
@@ -76,36 +72,31 @@ export const GenerateSeed = ({ navigation }: RootStackScreenProps<"GenerateSeed"
             </View>
           ))}
       </View>
+      <View style={[styles.copyButtonWrapper, baseline.marginRegularBottom]}>
+        <View style={styles.copyButtonContainer}>
+          <Button icon={copied ? "check" : "copy"} mode="outlined" onPress={handleCopyToClipboard}>
+            {copied ? "Copied!" : "Copy to clipboard"}
+          </Button>
+        </View>
+      </View>
       <View style={styles.actionContainer}>
         <Surface style={[baseline.checkboxListContainer, baseline.marginExtendedBottom]}>
           <View style={baseline.checkboxItemContainer}>
             <Checkbox
-              onPress={() => handleCheckboxPress("reveal")}
+              onPress={() => handleCheckboxPress()}
               checked={checkedRevealWords}
               text="Reveal words"
               size="medium"
               position="flex-start"
             />
           </View>
-          <Divider style={baseline.checkboxDividerLeft} />
-          <View style={baseline.checkboxItemContainer}>
-            <Checkbox
-              onPress={() => handleCheckboxPress("save")}
-              checked={checkedMnemonicSaved}
-              text="I saved my recovery phrase"
-              size="medium"
-              position="flex-start"
-            />
-          </View>
         </Surface>
-
         <View style={styles.buttonContainer}>
           <Button
             mode="contained"
             onPress={() =>
               navigation.navigate("ConfirmSeed", { displayName: "Confirm Recovery Phrase", mnemonic: mnemonic })
             }
-            disabled={checkedRevealWords && checkedMnemonicSaved ? false : true}
           >
             Continue
           </Button>

@@ -12,10 +12,20 @@ export const styles = StyleSheet.create({
     flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+
+  copyButtonWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
     flex: 1,
   },
+  copyButtonContainer: {
+    alignSelf: "center",
+    width: "60%",
+  },
+
   actionContainer: {},
-  infoIcon: {
+  copyIcon: {
     alignSelf: "center",
   },
   mnemonicCardContainer: {
