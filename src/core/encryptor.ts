@@ -7,7 +7,7 @@ const generateSalt = (): string => {
   return Buffer.from(salt).toString("base64");
 };
 
-export const keyFromPassword = (password: string, salt: string): string => {
+const getCryptoKey = (password: string, salt: string): string => {
   const inputBuffer = Buffer.from(password, "utf-8");
   const data = Crypto.pbkdf2Sync(inputBuffer, salt, 100000, 32, "sha512");
   return Buffer.from(data).toString("base64");
@@ -15,12 +15,12 @@ export const keyFromPassword = (password: string, salt: string): string => {
 
 export const encrypt = async (data: string, password: string): Promise<EncryptedObject> => {
   const salt = generateSalt();
-  const cryptoKey = keyFromPassword(password, salt);
+  const cryptoKey = getCryptoKey(password, salt);
   const result = await AesGcmCrypto.encrypt(data, false, cryptoKey);
   return { content: result.content, iv: result.iv, tag: result.tag, salt: salt };
 };
 
 export const decrypt = async (data: EncryptedObject, password: string): Promise<string> => {
-  const cryptoKey = keyFromPassword(password, data.salt);
+  const cryptoKey = getCryptoKey(password, data.salt);
   return await AesGcmCrypto.decrypt(data.content, cryptoKey, data.iv, data.tag, false);
 };
