@@ -5,7 +5,7 @@ const defaultTheme = MD3LightTheme;
 
 export const theme = {
   ...defaultTheme,
-  roundness: 12,
+  roundness: 4,
   colors: {
     ...defaultTheme.colors,
     trend: {
