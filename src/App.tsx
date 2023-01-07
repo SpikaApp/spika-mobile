@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import { Feather } from "@expo/vector-icons";
 import "expo-dev-client";
 import { StatusBar } from "react-native";
@@ -7,6 +8,9 @@ import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 
+import { AccountProvider } from "./context/AccountContext";
+import { UIProvider } from "./context/UIContext";
+import { Web3Provider } from "./context/Web3Context";
 import { Routes } from "./Routes";
 import { store } from "./store";
 import { theme } from "./theme";
@@ -23,8 +27,14 @@ export const App = () => {
             icon: (props) => <Feather {...props} />,
           }}
         >
-          <StatusBar barStyle={"default"} />
-          <Routes />
+          <UIProvider>
+            <Web3Provider>
+              <AccountProvider>
+                <StatusBar barStyle={"default"} />
+                <Routes />
+              </AccountProvider>
+            </Web3Provider>
+          </UIProvider>
         </PaperProvider>
       </PersistGate>
     </Provider>
