@@ -2,7 +2,7 @@ import * as SecureStore from "expo-secure-store";
 
 import { storeKeys } from "./constants";
 
-export const setPassword = async (password: string): Promise<void> => {
+export const storePassword = async (password: string): Promise<void> => {
   await SecureStore.setItemAsync(storeKeys.password, password);
 };
 
