@@ -6,6 +6,14 @@ type Trend = "green" | "red" | "neutral";
 
 type Days = "1" | "7" | "30" | "365";
 
+type InitAccountMethod = "generate" | "import";
+
+interface Network {
+  name: "mainnet" | "testnet" | "devnet";
+  nodeUrl: string;
+  faucetUrl?: string;
+}
+
 interface ErrorResponse {
   error: unknown;
   message: string | unknown;
@@ -28,8 +36,17 @@ interface BaseScreenProps {
   displayName: string;
 }
 
+interface TermsScreenProps extends BaseScreenProps {
+  nextRoute: InitAccountMethod;
+}
+
 interface ConfirmSeedScreenProps extends BaseScreenProps {
   mnemonic: string;
+}
+
+interface InitAccountProps extends BaseScreenProps {
+  mnemonic: string;
+  initType: InitAccountMethod;
 }
 
 interface AssetScreenProps extends BaseScreenProps {
