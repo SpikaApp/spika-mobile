@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { View } from "react-native";
 import { Avatar, Card, Text } from "react-native-paper";
 
+import { Web3Context } from "../../context/Web3Context";
 import { getCoinMarket } from "../../core/api";
-import { getBalance } from "../../core/web3";
 import { parseError } from "../../core/error";
 import { stringToValue } from "../../core/values";
 import { theme } from "../../theme";
@@ -17,6 +17,7 @@ type AssetCardProps = {
 };
 
 export const AssetCard = ({ address, asset, currency }: AssetCardProps) => {
+  const { web3 } = useContext(Web3Context);
   const [balance, setBalance] = useState<string>("0");
   const [value, setValue] = useState<string>("-");
   const [change, setChange] = useState<string>("-");
@@ -25,7 +26,7 @@ export const AssetCard = ({ address, asset, currency }: AssetCardProps) => {
   useEffect(() => {
     const getAssetBalance = async () => {
       try {
-        const result = await getBalance(address, asset.type);
+        const result = await web3.getBalance(address, asset.type);
         if (result) {
           setBalance(stringToValue(asset, result));
         }
@@ -66,7 +67,7 @@ export const AssetCard = ({ address, asset, currency }: AssetCardProps) => {
       getAssetMarket();
     }, 30000);
     return () => window.clearInterval(updateBalance);
-  }, [address, asset, currency, balance]);
+  }, [address, asset, currency, balance, web3]);
 
   const getTrendColor = () => {
     switch (trend) {
