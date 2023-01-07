@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 export interface OnboardingState {
   onboardingCompleted: boolean;
@@ -9,8 +9,8 @@ const initialState: OnboardingState = {
   onboardingCompleted: false,
 };
 
-export const onboarding = createSlice({
-  name: "onboarding",
+export const onboardingSlice = createSlice({
+  name: "onboardingSlice",
   initialState,
   reducers: {
     setOnboardingCompleted: (state, action: PayloadAction<boolean>) => {
@@ -19,4 +19,4 @@ export const onboarding = createSlice({
   },
 });
 
-export const { setOnboardingCompleted } = onboarding.actions;
+export const { setOnboardingCompleted } = onboardingSlice.actions;

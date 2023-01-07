@@ -2,7 +2,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
 
-import { onboarding } from "./slices/onboarding";
+import {
+  accountRegistry,
+  assetRegistry,
+  configRegistry,
+  networkRegistry,
+  onboardingSlice,
+  secretSlice,
+} from "./slices";
 
 const persistConfig = {
   key: "root",
@@ -10,7 +17,12 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  onboarding: onboarding.reducer,
+  onboarding: onboardingSlice.reducer,
+  secret: secretSlice.reducer,
+  accountRegistry: accountRegistry.reducer,
+  assetRegistry: assetRegistry.reducer,
+  networkRegistry: networkRegistry.reducer,
+  configRegistry: configRegistry.reducer,
 });
 
 export const persistedReducer = persistReducer(persistConfig, rootReducer);
