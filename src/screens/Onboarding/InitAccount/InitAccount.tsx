@@ -4,12 +4,13 @@ import { View } from "react-native";
 import { Button, HelperText, Surface, Text, TextInput } from "react-native-paper";
 import { useDispatch } from "react-redux";
 
-import { getAptosAccount } from "../../../core/web3";
-import type { RootStackScreenProps } from "../../../Routes";
-import { getRouteParams } from "../../../core/navigation";
-import { addAccount, initMaster } from "../../../store/slices/account";
-import { baseline } from "../../../theme";
 import { encrypt } from "../../../core/encryptor";
+import { getRouteParams } from "../../../core/navigation";
+import { storePassword } from "../../../core/password";
+import type { RootStackScreenProps } from "../../../Routes";
+import { setOnboardingCompleted } from "../../../store/slices";
+import { setSecret } from "../../../store/slices/secretSlice";
+import { baseline } from "../../../theme";
 
 import { styles } from "./styles";
 
@@ -23,6 +24,7 @@ interface PasswordStatus {
 }
 
 export const InitAccount = ({ navigation }: RootStackScreenProps<"InitAccount">) => {
+  const [initType] = useState<string>((getRouteParams(navigation) as InitAccountProps).initType);
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPasswor] = useState<string>("");
   const [passwordStatus, setPasswordStatus] = useState<PasswordStatus | undefined>(undefined);
@@ -65,21 +67,13 @@ export const InitAccount = ({ navigation }: RootStackScreenProps<"InitAccount">)
     }
   }, [confirmPassword, password, passwordStatus]);
 
-  const initAccount = async () => {
+  const init = async () => {
     const { mnemonic } = getRouteParams(navigation) as ConfirmSeedScreenProps;
-    const account = getAptosAccount(0, mnemonic);
     const encryptedMnemonic = await encrypt(mnemonic, password);
-    const publicAccount: SpikaAccount = {
-      index: 0,
-      name: "Account 1",
-      data: {
-        address: account.address().hex(),
-        pubKey: account.pubKey().hex(),
-        authKey: account.authKey().hex(),
-      },
-    };
-    dispatch(initMaster(encryptedMnemonic));
-    dispatch(addAccount(publicAccount));
+    dispatch(setSecret(encryptedMnemonic));
+    storePassword(password);
+    dispatch(setOnboardingCompleted(true));
+    navigation.navigate("Home", { displayName: "" });
   };
 
   return (
@@ -137,8 +131,9 @@ export const InitAccount = ({ navigation }: RootStackScreenProps<"InitAccount">)
         </View>
       </View>
       <View style={[baseline.marginRegularTop, styles.buttonContainer]}>
-        <Button mode="contained" disabled={passwordValidated ? false : true} onPress={initAccount}>
-          Create Account
+        <Button mode="contained" disabled={passwordValidated ? false : true} onPress={init}>
+          {initType === "generate" && "Create Account"}
+          {initType === "import" && "Import Account"}
         </Button>
       </View>
     </View>

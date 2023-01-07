@@ -4,16 +4,15 @@ import { View } from "react-native";
 import Dialog from "react-native-dialog";
 import { Chip, Text, TextInput } from "react-native-paper";
 
-import { createEmptyMnemonicObject, mnemonicToString, normalizeMnemonic } from "../../../core/mnemonic";
-import { getRouteParams } from "../../../core/navigation";
+import { createEmptyMnemonicObject, mnemonicToString } from "../../../core/mnemonic";
 import type { RootStackScreenProps } from "../../../Routes";
 import { baseline } from "../../../theme";
 import { shuffle } from "../../../utils/shuffle";
 
 import { styles } from "./styles";
 
-export const ConfirmSeed = ({ navigation }: RootStackScreenProps<"ConfirmSeed">) => {
-  const [mnemonic] = useState<string>((getRouteParams(navigation) as ConfirmSeedScreenProps).mnemonic);
+export const ImportAccount = ({ navigation }: RootStackScreenProps<"ImportAccount">) => {
+  const [mnemonic, setMnemonic] = useState<string>("");
   const [userConfirmedMnemonic, setUserConfirmedMnemonic] = useState<Array<MnemonicWord>>(createEmptyMnemonicObject());
   const [currentWord, setCurrentWord] = useState<MnemonicWord>({ index: 0, value: "" });
   const [searchResult, setSearchResult] = useState<Array<string>>([]);
@@ -24,7 +23,6 @@ export const ConfirmSeed = ({ navigation }: RootStackScreenProps<"ConfirmSeed">)
   useEffect(() => {
     const search = (searchStr: string) => {
       const data: Array<string> = [];
-      const correctWord = normalizeMnemonic(mnemonic).find((word) => word.index === currentWord.index);
 
       wordlist.filter((word) => {
         const match = word.startsWith(searchStr);
@@ -44,13 +42,6 @@ export const ConfirmSeed = ({ navigation }: RootStackScreenProps<"ConfirmSeed">)
         result = data;
       }
 
-      if (correctWord && result.find((word) => word === correctWord.value)) {
-        return result;
-      } else if (correctWord && correctWord.value.startsWith(searchStr)) {
-        result = result.slice(0, 2);
-        result.push(correctWord.value);
-      }
-
       shuffle(result);
 
       if (searchStr.length > 0) {
@@ -62,7 +53,7 @@ export const ConfirmSeed = ({ navigation }: RootStackScreenProps<"ConfirmSeed">)
 
     const searchString = currentWord.value;
     search(searchString);
-  }, [currentWord, mnemonic]);
+  }, [currentWord]);
 
   useEffect(() => {
     const data = userConfirmedMnemonic.filter((word) => word.value !== "");
@@ -79,26 +70,29 @@ export const ConfirmSeed = ({ navigation }: RootStackScreenProps<"ConfirmSeed">)
     if (allWordsComplete) {
       try {
         const mnemonicString = mnemonicToString(userConfirmedMnemonic);
-        if (mnemonicString === mnemonic) {
+        if (mnemonicString) {
           setMnemonicError(false);
           setMnemonicValidated(true);
+          setMnemonic(mnemonicString);
         } else {
           setMnemonicError(true);
           setMnemonicValidated(false);
+          setMnemonic("");
         }
       } catch (error) {
         setMnemonicError(true);
         setMnemonicValidated(false);
+        setMnemonic("");
       }
     }
-  }, [allWordsComplete, mnemonic, userConfirmedMnemonic]);
+  }, [allWordsComplete, userConfirmedMnemonic]);
 
   // We go to next screen if mnemonic was successfully validated
   useEffect(() => {
     if (mnemonicValidated) {
-      navigation.navigate("InitAccount", { displayName: "Create Password", mnemonic: mnemonic, initType: "generate" });
+      navigation.navigate("InitAccount", { displayName: "Create Password", mnemonic: mnemonic, initType: "import" });
     }
-  }, [mnemonic, mnemonicValidated, navigation]);
+  }, [mnemonicValidated, navigation, mnemonic]);
 
   const handleInput = (input: string): void => {
     const completePhrase = input.split(" ");

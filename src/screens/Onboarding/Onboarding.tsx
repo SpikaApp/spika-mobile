@@ -27,7 +27,7 @@ export const Onboarding = ({ navigation }: RootStackScreenProps<"Onboarding">) =
           <Button
             mode="contained"
             onPress={() => {
-              navigation.navigate("Terms", { displayName: "Terms of Service" });
+              navigation.navigate("Terms", { displayName: "Terms of Service", nextRoute: "generate" });
             }}
           >
             Create Account
@@ -36,7 +36,7 @@ export const Onboarding = ({ navigation }: RootStackScreenProps<"Onboarding">) =
             mode="outlined"
             style={{ marginTop: 30 }}
             onPress={() => {
-              console.log("test");
+              navigation.navigate("Terms", { displayName: "Terms of Service", nextRoute: "import" });
             }}
           >
             Import Account

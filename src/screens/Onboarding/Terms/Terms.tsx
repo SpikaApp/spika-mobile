@@ -4,6 +4,7 @@ import { Button, Card, Divider, Surface, Text } from "react-native-paper";
 
 import { License, PrivacyPolicy, TermsOfService } from "../../../assets/terms";
 import { Checkbox } from "../../../components/Base/Checkbox";
+import { getRouteParams } from "../../../core/navigation";
 import type { RootStackScreenProps } from "../../../Routes";
 import { baseline } from "../../../theme/baseline";
 
@@ -12,6 +13,7 @@ import { styles } from "./styles";
 type Rule = "tos" | "privacy";
 
 export const Terms = ({ navigation }: RootStackScreenProps<"Terms">) => {
+  const { nextRoute } = getRouteParams(navigation) as TermsScreenProps;
   const [checkedTermsOfService, setCheckedTermsOfService] = useState<boolean>(false);
   const [checkedPrivacyPolicy, setCheckedPrivacyPolicy] = useState<boolean>(false);
 
@@ -27,6 +29,17 @@ export const Terms = ({ navigation }: RootStackScreenProps<"Terms">) => {
           return !prev;
         });
         break;
+    }
+  };
+
+  const handleContinue = () => {
+    switch (nextRoute) {
+      case "generate":
+        navigation.navigate("GenerateSeed", { displayName: "Your Recovery Phrase" });
+        break;
+
+      case "import":
+        navigation.navigate("ImportAccount", { displayName: "Import Account" });
     }
   };
 
@@ -104,7 +117,7 @@ export const Terms = ({ navigation }: RootStackScreenProps<"Terms">) => {
         <View style={styles.buttonWrapper}>
           <Button
             mode="contained"
-            onPress={() => navigation.navigate("GenerateSeed", { displayName: "Your Recovery Phrase" })}
+            onPress={handleContinue}
             disabled={checkedTermsOfService && checkedPrivacyPolicy ? false : true}
           >
             Continue
