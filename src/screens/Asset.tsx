@@ -2,6 +2,10 @@ import { StyleSheet, View } from "react-native";
 
 import type { RootStackScreenProps } from "../Routes";
 
+export const Asset = ({ navigation }: RootStackScreenProps<"Asset">) => {
+  return <View style={styles.container} />;
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -9,7 +13,3 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-
-export const Asset = ({ navigation }: RootStackScreenProps<"Asset">) => {
-  return <View style={styles.container} />;
-};
